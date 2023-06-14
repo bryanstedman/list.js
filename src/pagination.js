@@ -22,10 +22,27 @@ module.exports = function (list) {
       currentPage = Math.ceil(index / page),
       innerWindow = options.innerWindow || 2,
       left = options.left || options.outerWindow || 0,
-      right = options.right || options.outerWindow || 0
+      right = options.right || options.outerWindow || 0,
+      includeDirectionLinks = options.includeDirectionLinks || false,
+      leftDirectionText = options.leftDirectionText || '&laquo;',
+      rightDirectionText = options.rightDirectionText || '&raquo;';
 
     right = pages - right
     pagingList.clear()
+    if (includeDirectionLinks) {
+      // Include previous link
+      item = pagingList.add({
+          page: leftDirectionText,
+          dotted: false
+      })[0];
+      classes(item.elm).add("prev");
+      if (currentPage - 1 > 0) {
+        item.elm.firstChild.setAttribute('data-i', currentPage - 1)
+        item.elm.firstChild.setAttribute('data-page', page)
+      } else {
+        classes(item.elm).add("disabled");
+      }
+    }
     for (var i = 1; i <= pages; i++) {
       var className = currentPage === i ? 'active' : ''
 
@@ -47,6 +64,20 @@ module.exports = function (list) {
           dotted: true,
         })[0]
         classes(item.elm).add('disabled')
+      }
+    }
+    if (includeDirectionLinks) {
+      // Include next link
+      item = pagingList.add({
+          page: rightDirectionText,
+          dotted: false
+      })[0];
+      classes(item.elm).add("next");
+      if (currentPage + 1 <= pages) {
+        item.elm.firstChild.setAttribute('data-i', currentPage + 1)
+        item.elm.firstChild.setAttribute('data-page', page)
+      } else {
+        classes(item.elm).add("disabled");
       }
     }
   }
