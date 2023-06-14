@@ -370,4 +370,97 @@ describe('Pagination', function () {
       expect(list.listContainer.style.display).toBe('block')
     })
   })
+  
+  
+  
+  describe('Custom settings, includeDirectionLinks: true, leftDirectionText: prev, rightDirectionText: next', function () {
+    var list, itemHTML, pagination
+  
+    beforeAll(function () {
+      itemHTML = fixturePagination.list(['name'])
+      list = new List(
+        'list-pagination',
+        {
+          valueNames: ['name'],
+          item: itemHTML,
+          page: 2,
+          pagination: {
+            includeDirectionLinks: true,
+            leftDirectionText: 'prev',
+            rightDirectionText: 'next',
+          },
+        },
+        fixturePagination.all
+      )
+  
+      pagination = $('.pagination')
+    })
+  
+    afterAll(function () {
+      fixturePagination.removeList()
+    })
+  
+    it('should have default settings', function () {
+      expect(pagination.find('a').length).toEqual(6)
+      expect(pagination.find('a').get(0).innerHTML).toEqual('prev')
+      expect(pagination.find('a').get(1).innerHTML).toEqual('1')
+      expect(pagination.find('a').get(2).innerHTML).toEqual('2')
+      expect(pagination.find('a').get(3).innerHTML).toEqual('3')
+      expect(pagination.find('a').get(4).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(5).innerHTML).toEqual('next')
+      expect(pagination.find('a').get(6)).toEqual(undefined)
+    })
+  
+    it('should test show(7,2)', function () {
+      list.show(7, 2)
+      expect(pagination.find('a').length).toEqual(9)
+      expect(pagination.find('a').get(0).innerHTML).toEqual('prev')
+      expect(pagination.find('a').get(1).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(2).innerHTML).toEqual('2')
+      expect(pagination.find('a').get(3).innerHTML).toEqual('3')
+      expect(pagination.find('a').get(4).innerHTML).toEqual('4')
+      expect(pagination.find('a').get(5).innerHTML).toEqual('5')
+      expect(pagination.find('a').get(6).innerHTML).toEqual('6')
+      expect(pagination.find('a').get(7).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(8).innerHTML).toEqual('next')
+      expect(pagination.find('a').get(9)).toEqual(undefined)
+      expect($(pagination.find('li').get(3)).hasClass('active')).toEqual(false)
+      expect($(pagination.find('li').get(4)).hasClass('active')).toEqual(true)
+      expect($(pagination.find('li').get(5)).hasClass('active')).toEqual(false)
+    })
+  
+    it('should test show(12,2)', function () {
+      list.show(12, 2)
+      expect(pagination.find('a').length).toEqual(9)
+      expect(pagination.find('a').get(0).innerHTML).toEqual('prev')
+      expect(pagination.find('a').get(1).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(2).innerHTML).toEqual('4')
+      expect(pagination.find('a').get(3).innerHTML).toEqual('5')
+      expect(pagination.find('a').get(4).innerHTML).toEqual('6')
+      expect(pagination.find('a').get(5).innerHTML).toEqual('7')
+      expect(pagination.find('a').get(6).innerHTML).toEqual('8')
+      expect(pagination.find('a').get(7).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(8).innerHTML).toEqual('next')
+      expect(pagination.find('a').get(9)).toEqual(undefined)
+      expect($(pagination.find('li').get(3)).hasClass('active')).toEqual(false)
+      expect($(pagination.find('li').get(4)).hasClass('active')).toEqual(true)
+      expect($(pagination.find('li').get(5)).hasClass('active')).toEqual(false)
+    })
+    it('should show last page with show(17,2)', function () {
+      list.show(17, 2)
+      expect(pagination.find('a').length).toEqual(6)
+      expect(pagination.find('a').get(0).innerHTML).toEqual('prev')
+      expect(pagination.find('a').get(1).innerHTML).toEqual('...')
+      expect(pagination.find('a').get(2).innerHTML).toEqual('7')
+      expect(pagination.find('a').get(3).innerHTML).toEqual('8')
+      expect(pagination.find('a').get(4).innerHTML).toEqual('9')
+      expect(pagination.find('a').get(5).innerHTML).toEqual('next')
+      expect(pagination.find('a').get(7)).toEqual(undefined)
+      expect($(pagination.find('li').get(2)).hasClass('active')).toEqual(false)
+      expect($(pagination.find('li').get(3)).hasClass('active')).toEqual(false)
+      expect($(pagination.find('li').get(4)).hasClass('active')).toEqual(true)
+    })
+  })
+  
+  
 })
